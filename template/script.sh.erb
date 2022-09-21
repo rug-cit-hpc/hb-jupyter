@@ -1,57 +1,49 @@
 #!/usr/bin/env bash
 
 <%-
-cuda = (context.node_type == "gpu") ? context.cuda_version : ""
-modules = (context.modules)
-wrapper = session.staged_root.join("launch_wrapper.sh")
-wrapper_log = session.staged_root.join("launch_wrapper.log")
-kernels = {
-    python36: {
-        display_name: "Python 3.6.4",
-        language: "python",
-        argv: [
-            wrapper,
-            "python",
-            "-m",
-            "ipykernel_launcher",
-            "-f",
-            "{connection_file}"
-        ],
-        env: {
-            MODULES: "#{modules}"
-        }
-    },
-    python37: {
-        display_name: "Python 3.7.2",
-        language: "python",
-        argv: [
-            wrapper,
-            "python",
-            "-m",
-            "ipykernel_launcher",
-            "-f",
-            "{connection_file}"
-        ],
-        env: {
-            MODULES: "#{modules}"
-        }
-    },
-    python36cuda: {
-        display_name: "Python 3.6.4 CUDA",
-        language: "python",
-        argv: [
-            wrapper,
-            "python",
-            "-m",
-            "ipykernel_launcher",
-            "-f",
-            "{connection_file}"
-        ],
-        env: {
-            MODULES: "#{modules} TensorFlow/1.12.0-foss-2018a-Python-3.6.4 #{cuda}"
+    cuda = ""
+    python_version = case context.version
+                        when "IPython/7.2.0-fosscuda-2018b-Python-3.6.6"
+                            "Python 3.6.6 (GPU)"
+                        when "IPython/7.7.0-foss-2019a-Python-3.7.2"
+                            "Python 3.7.2"
+                        when "IPython/7.7.0-fosscuda-2019a-Python-3.7.2"
+                            "Python 3.7.2 (GPU)"
+                        when "IPython/7.9.0-foss-2019b-Python-3.7.4"
+                            "Python 3.7.4"
+                        when "IPython/7.9.0-fosscuda-2019b-Python-3.7.4"
+                            "Python 3.7.4 (GPU)"
+                        when "IPython/7.15.0-foss-2020a-Python-3.8.2"
+                            "Python 3.8.2"
+                        when "IPython/7.15.0-foss-2020a-Python-3.8.2 CUDA/11.4.1"
+                            "Python 3.8.2 (GPU)"
+                        when "IPython/7.25.0-GCCcore-10.3.0"
+                            "Python 3.9.5"
+                        when "IPython/7.25.0-GCCcore-10.3.0 CUDA/11.4.1"
+                            "Python 3.9.5 (GPU)"
+                        else
+                            "Python"
+                        end
+    modules = (context.version)
+    wrapper = session.staged_root.join("launch_wrapper.sh")
+    wrapper_log = session.staged_root.join("launch_wrapper.log")
+    kernels = {
+        python: {
+            display_name: python_version,
+            language: "python",
+            argv: [
+                wrapper,
+                "python",
+                "-m",
+                "ipykernel_launcher",
+                "-f",
+                "{connection_file}"
+            ],
+            env: {
+                MODULES: "#{modules}"
+            }
         }
     }
-}
 -%>
 
 echo "Starting main script..."
@@ -87,15 +79,30 @@ EOL
 chmod 700 "<%= wrapper %>"
 echo "TTT - $(date)"
 
+# Create custom Jupyter kernels
+echo "Creating custom Jupyter kernels..."
+export JUPYTER_PATH="${PWD}/share/jupyter"
+<%- kernels.each do |name, kernel| -%>
+<%- path = "${JUPYTER_PATH}/kernels/sys_#{name}" -%>
+mkdir -p "<%= path %>"
+cp "${PWD}/assets/<%= name.to_s.gsub(/\d/, "") %>"/* "<%= path %>/."
+(
+umask 077
+cat > "<%= path %>/kernel.json" << EOL
+<%= JSON.pretty_generate kernel %>
+EOL
+)
+<%- end -%>
+echo "TTT - $(date)"
+
 # Setup Jupyter environment
 module use $MODULEPATH_ROOT/project/ondemand
-module load <%= context.modules %>
+module load <%= modules %>
 module list
 echo "TTT - $(date)"
 
 # Set working directory to notebook root directory
 cd "<%- context.start_folder -%>"
-#"${NOTEBOOK_ROOT}"
 echo ${PWD}
 
 # List available kernels for debugging purposes
@@ -107,4 +114,4 @@ echo "TTT - $(date)"
 # Launch the Jupyter server
 echo $JUPYTER_CONFIG_PATH
 set -x
-jupyter <%= context.jupyterlab_switch == "1" ? "lab" : "notebook" %> --config="${CONFIG_FILE}"
+jupyter notebook --config="${CONFIG_FILE}"

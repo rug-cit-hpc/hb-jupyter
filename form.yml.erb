@@ -1,19 +1,4 @@
 <%-
-  cmd = "sinfo -ho %R"
-  begin
-    output, status = Open3.capture2e(cmd)
-    if status.success?
-      partitions = output.split("\n").map(&:strip).reject(&:blank?).sort
-    else
-      raise output
-    end
-  rescue => e
-    partitions = []
-    error = e.message.strip
-  end
--%>
-
-<%-
     paths = []
     paths << Pathname.new("/home/#{User.new.name}")
     paths << Pathname.new("/data/#{User.new.name}")
@@ -28,23 +13,81 @@
 cluster: "peregrine"
 
 form:
-  - modules
-  - extra_jupyter_args
   - node_type
-  - cuda_version
-#  - python_version
-  - custom_queue
-  - wall_time
-  - num_cores
   - version
-  - jupyterlab_switch
+  - walltime
+  - num_cores
   - memory
   - start_folder
-  - reservation
-  - bc_email_on_started
+  - pg_email_on_started
+  - pg_email_user
 
 attributes:
-  wall_time:
+  node_type:
+    label: Node Type
+    help: |
+      Select the type of node you would like to use. For information on the different options, please see 
+      [our wiki](https://wiki.hpc.rug.nl/peregrine/introduction/cluster_description#compute_nodes)
+    widget: select
+    options:
+      - [ "Regular", "regular" ]
+      - [ "Himem", "himem" ]
+      - [ "GPU (K40)", "gpuk40" ]
+      - [ "GPU (V100)", "gpuv100" ]
+      - [ "GELIFES", "gelifes" ]
+
+  version:
+    widget: "select"
+    label: "Python Version"
+    help: |
+      Select one of the Python versions from the dropdown.
+    options:
+    #   - [   "Python 3.6.4", "IPython/6.4.0-foss-2018a-Python-3.6.4" ]
+      - [   "Python 3.6.6 (GPU)", "IPython/7.2.0-fosscuda-2018b-Python-3.6.6", 
+            data-option-for-node-type-regular: false, 
+            data-option-for-node-type-himem: false, 
+            data-option-for-node-type-gelifes: false
+        ]
+      - [   "Python 3.7.2", "IPython/7.7.0-foss-2019a-Python-3.7.2",
+            data-option-for-node-type-gpuk40: false, 
+            data-option-for-node-type-gpuv100: false
+        ]
+      - [   "Python 3.7.2 (GPU)", "IPython/7.7.0-fosscuda-2019a-Python-3.7.2",
+            data-option-for-node-type-regular: false, 
+            data-option-for-node-type-himem: false, 
+            data-option-for-node-type-gelifes: false
+        ]
+      - [   "Python 3.7.4", "IPython/7.9.0-foss-2019b-Python-3.7.4",
+            data-option-for-node-type-gpuk40: false, 
+            data-option-for-node-type-gpuv100: false
+        ]
+      - [   "Python 3.7.4 (GPU)", "IPython/7.9.0-fosscuda-2019b-Python-3.7.4",
+            data-option-for-node-type-regular: false, 
+            data-option-for-node-type-himem: false, 
+            data-option-for-node-type-gelifes: false
+        ]
+      - [   "Python 3.8.2", "IPython/7.15.0-foss-2020a-Python-3.8.2",
+            data-option-for-node-type-gpuk40: false, 
+            data-option-for-node-type-gpuv100: false
+        ]
+      - [   "Python 3.8.2 (GPU)", "IPython/7.15.0-foss-2020a-Python-3.8.2 CUDA/11.4.1",
+            data-option-for-node-type-regular: false, 
+            data-option-for-node-type-himem: false, 
+            data-option-for-node-type-gelifes: false
+        ]
+      - [   "Python 3.9.5", "IPython/7.25.0-GCCcore-10.3.0",
+            data-option-for-node-type-gpuk40: false, 
+            data-option-for-node-type-gpuv100: false
+        ]
+      - [   "Python 3.9.5 (GPU)", "IPython/7.25.0-GCCcore-10.3.0 CUDA/11.4.1",
+            data-option-for-node-type-regular: false, 
+            data-option-for-node-type-himem: false, 
+            data-option-for-node-type-gelifes: false
+        ]
+#      - [   "R 3.6.1", "R/3.6.1-foss-2018a IPython/6.4.0-foss-2018a-Python-3.6.4 Pandoc/2.5" ]
+#      - [   "R 4.1.0", "R/4.1.0-foss-2021a IPython/7.25.0-GCCcore-10.3.0" ]
+
+  walltime:
     label: Wall time
     help: "Please give the wall time in the SLURM format, D-HH:MM:SS"
     widget: "text_field"
@@ -55,24 +98,8 @@ attributes:
     widget: 'number_field'
     value: 2
     min: 1
-    max: 128
     step: 1
-  extra_jupyter_args: ""
-  node_type: 'gpu'
 
-  custom_queue:
-    label: Partition
-    help: Please select a partition from the drop-down menu.
-  <%- if partitions.blank? -%>
-    widget: text_field
-  <%- else -%>
-    widget: select
-    options:
-    <%- partitions.each do |q| -%>
-      - [ "<%= q %>", "<%= q %>" ]
-    <%- end -%>
-  <%- end -%>
-  
   start_folder:
     label: Notebook root folder
     help: Where should the jupyter server start?
@@ -85,44 +112,27 @@ attributes:
       - [ "<%= q %>", "<%= q %>" ]
     <%- end -%>
   <%- end -%>
-    
+
   num_cores:
-    widget: "number_field"
-    label: "Number of cores"
+    widget: number_field
+    label: Number of CPU cores
     value: 1
     id: 'num_cores'
     help: |
-      Number of cores per node.
+      Select the number of CPU cores.
     min: 1
-    max: 48
     step: 1
 
-#  cuda_version:
-#    widget: "select"
-#    label: "CUDA Version"
-#    help: |
-#      CUDA is Nvidia's GPU-specific parallel computing framework. A GPU node
-#      is required to make use of this functionality.
-#    options:
-#      - [ "CUDA/10.1.105", "CUDA/10.1.105-GCC-8.2.0-2.31.1" ]
-  cuda_version: "CUDA/10.1.105-GCC-8.2.0-2.31.1"
-  modules:
-    widget: "select"
-    label: "Python Version"
+  pg_email_on_started:
+    label: "Email notification"
     help: |
-      Select one of the Python versions from the dropdown.
-
-      **If you select a GPU version, you also need to specify the GPU partition.**
+      Would you like to be notified via email when your session starts?
+    widget: "select"
     options:
-      - [ "Python 3.6.4", "IPython/6.4.0-foss-2018a-Python-3.6.4" ]
-      - [ "Python 3.6.4", "IPython/6.4.0-foss-2018a-Python-3.6.4" ]
-      - [ "Python 3.7.2", "IPython/7.7.0-foss-2019a-Python-3.7.2" ]
-      - [ "Python 3.7.4", "IPython/7.9.0-foss-2019b-Python-3.7.4" ]
-      - [ "Python 3.7.4 GPU", "IPython/7.9.0-fosscuda-2019b-Python-3.7.4" ]
-      - [ "Python 3.8.2", "IPython/7.15.0-foss-2020a-Python-3.8.2" ]
-      - [ "Python 3.9.5", "IPython/7.25.0-GCCcore-10.3.0" ]
-      - [ "R 3.6.1", "R/3.6.1-foss-2018a IPython/6.4.0-foss-2018a-Python-3.6.4 Pandoc/2.5" ]
-  version: "jupyter/Python3.7"
-  jupyterlab_switch: 0
-  reservation: "xdmod-test"
+      - ["No", "no", data-hide-pg-email-user: true]
+      - ["Yes", "yes"]
 
+  pg_email_user:
+    label: Email
+    help: "Your email for notifications"
+    widget: "text_field"
