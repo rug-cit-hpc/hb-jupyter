@@ -11,13 +11,13 @@
     
     if node_type == "regular" 
         if time < 1800
-            partition = 'short'
+            partition = 'regularshort'
         elsif time >= 1800
-            partition = 'regular'
+            partition = 'regularmedium'
         end
     elsif node_type == 'himem'
-        partition = 'himem'
-    elsif node_type == 'gpuk40' || node_type == 'gpuv100'
+        partition = 'himemmedium'
+    elsif node_type == 'gpua100' || node_type == 'gpua100.20gb' || node_type == 'gpuv100'
         gpu_type_match = /^gpu(.*)/.match(node_type)
         gpu_type = gpu_type_match[1]
         if time < 7200
@@ -37,10 +37,10 @@ script:
     <%- if partition == 'gpu' or partition == 'gpushort' -%>
     - '--gres=gpu:<%= gpu_type %>:1'
     <%- end -%>
-    <%- if pg_email_on_started and not pg_email_user.blank? -%>
-    - "--mail-type=BEGIN"
-    - "--mail-user=<%= pg_email_user %>"
-    <%- end -%>
+#     <%- if pg_email_on_started and not pg_email_user.blank? -%>
+#     - "--mail-type=BEGIN"
+#     - "--mail-user=<%= pg_email_user %>"
+#     <%- end -%>
     - "-c"
     - "<%= num_cores.blank? ? 1 : num_cores.to_i %>"
     - "--mem"

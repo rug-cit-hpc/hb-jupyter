@@ -3,24 +3,10 @@
 <%-
     cuda = ""
     python_version = case context.version
-                        when "IPython/7.2.0-fosscuda-2018b-Python-3.6.6"
-                            "Python 3.6.6 (GPU)"
-                        when "IPython/7.7.0-foss-2019a-Python-3.7.2"
-                            "Python 3.7.2"
-                        when "IPython/7.7.0-fosscuda-2019a-Python-3.7.2"
-                            "Python 3.7.2 (GPU)"
-                        when "IPython/7.9.0-foss-2019b-Python-3.7.4"
-                            "Python 3.7.4"
-                        when "IPython/7.9.0-fosscuda-2019b-Python-3.7.4"
-                            "Python 3.7.4 (GPU)"
-                        when "IPython/7.15.0-foss-2020a-Python-3.8.2"
-                            "Python 3.8.2"
-                        when "IPython/7.15.0-foss-2020a-Python-3.8.2 CUDA/11.4.1"
-                            "Python 3.8.2 (GPU)"
-                        when "IPython/7.25.0-GCCcore-10.3.0"
-                            "Python 3.9.5"
-                        when "IPython/7.25.0-GCCcore-10.3.0 CUDA/11.4.1"
-                            "Python 3.9.5 (GPU)"
+                        when "IPython/8.5.0-GCCcore-11.3.0"
+                            "Python 3.10.4"
+                        when "IPython/8.5.0-GCCcore-11.3.0 CUDA/11.7.0"
+                            "Python 3.10.4 (GPU)"
                         else
                             "Python"
                         end
