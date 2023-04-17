@@ -1,16 +1,15 @@
 <%-
     paths = []
-#     paths << Pathname.new("/home/#{User.new.name}")
     paths << Pathname.new("/projects/#{User.new.name}")
     paths << Pathname.new("/scratch/#{User.new.name}")
 
-    projects = User.new.groups.map(&:name).grep(/^pg-./)
+    projects = User.new.groups.map(&:name).grep(/^hb-./)
 
     paths.concat projects.map { |p| Pathname.new("/projects/#{p}")  }
 -%>
 
 ---
-cluster: "habrok"
+cluster: "login1"
 
 form:
   - node_type
@@ -32,11 +31,10 @@ attributes:
     options:
       - [ "Regular", "regular" ]
       - [ "Himem", "himem" ]
-      - [ "Parallel", "parallel"]
-#       - [ "GPU (V100)", "gpuv100" ]
       - [ "GPU (A100_1)", "gpua100" ]
       - [ "GPU (A100_2)", "gpua100.20gb" ]
       - [ "GELIFES", "gelifes" ]
+      - [ "GPU (V100)", "gpuv100" ]
 
   version:
     widget: "select"
@@ -94,7 +92,7 @@ attributes:
     min: 1
     step: 1
 
-#   pg_email_on_started:
+#   hb_email_on_started:
 #     label: "Email notification"
 #     help: |
 #       Would you like to be notified via email when your session starts?
@@ -103,7 +101,7 @@ attributes:
 #       - ["No", "no", data-hide-pg-email-user: true]
 #       - ["Yes", "yes"]
 #
-#   pg_email_user:
+#   hb_email_user:
 #     label: Email
 #     help: "Your email for notifications"
 #     widget: "text_field"
