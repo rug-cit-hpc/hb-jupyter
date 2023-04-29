@@ -37,11 +37,11 @@ script:
   queue_name: <%= partition %>
   native:
     <%- if partition == 'gpu' or partition == 'gpushort' -%>
-      - '--gres=gpu:<%= gpu_type %>:1'
+    - '--gres=gpu:<%= gpu_type %>:1'
     <%- end -%>
     <%- if hb_email_on_started and not hb_email_user.blank? -%>
-      - "--mail-type=BEGIN"
-      - "--mail-user=<%= hb_email_user %>"
+    - "--mail-type=BEGIN"
+    - "--mail-user=<%= hb_email_user %>"
     <%- end -%>
     - "--mem"
     - "<%= memory.blank? ? 2000 : memory.to_i * 1000 %>"
