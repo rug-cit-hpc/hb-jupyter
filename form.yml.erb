@@ -18,8 +18,6 @@ form:
   - num_cores
   - memory
   - start_folder
-#   - hb_email_on_started
-#   - hb_email_user
 
 attributes:
   node_type:
@@ -34,7 +32,7 @@ attributes:
       - [ "GPU (A100_1)", "gpua100" ]
       - [ "GPU (A100_2)", "gpua100.20gb" ]
       - [ "GELIFES", "gelifes" ]
-    #   - [ "GPU (V100)", "gpuv100" ]
+      - [ "GPU (V100)", "gpuv100" ]
 
   version:
     widget: "select"
@@ -91,17 +89,4 @@ attributes:
       Select the number of CPU cores.
     min: 1
     step: 1
-
-#   hb_email_on_started:
-#     label: "Email notification"
-#     help: |
-#       Would you like to be notified via email when your session starts?
-#     widget: "select"
-#     options:
-#       - ["No", "no", data-hide-pg-email-user: true]
-#       - ["Yes", "yes"]
-#
-#   hb_email_user:
-#     label: Email
-#     help: "Your email for notifications"
-#     widget: "text_field"
+    max: 128
