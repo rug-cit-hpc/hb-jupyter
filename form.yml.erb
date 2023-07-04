@@ -1,11 +1,10 @@
 <%-
     paths = []
-    paths << Pathname.new("/projects/#{User.new.name}")
     paths << Pathname.new("/scratch/#{User.new.name}")
 
     projects = User.new.groups.map(&:name).grep(/^hb-./)
 
-    paths.concat projects.map { |p| Pathname.new("/projects/#{p}")  }
+    paths.concat projects.map { |p| Pathname.new("/scratch/#{p}")  }
 -%>
 
 ---
