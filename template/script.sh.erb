@@ -67,7 +67,7 @@ echo "TTT - $(date)"
 
 # Create custom Jupyter kernels
 echo "Creating custom Jupyter kernels..."
-export JUPYTER_PATH="${PWD}/share/jupyter"
+export JUPYTER_PATH="${PWD}/share/jupyter:$HOME/.local/share/jupyter"
 <%- kernels.each do |name, kernel| -%>
 <%- path = "${JUPYTER_PATH}/kernels/sys_#{name}" -%>
 mkdir -p "<%= path %>"
