@@ -3,10 +3,15 @@
 <%-
     cuda = ""
     python_version = case context.version
-                        when "IPython/8.5.0-GCCcore-11.3.0"
+                        when "IPython/8.5.0-GCCcore-11.3.0 jupyterlmod/4.0.3-GCCcore-11.3.0"
                             "Python 3.10.4"
-                        when "IPython/8.5.0-GCCcore-11.3.0 CUDA/11.7.0"
+                        when "IPython/8.5.0-GCCcore-11.3.0 jupyterlmod/4.0.3-GCCcore-11.3.0 CUDA/11.7.0"
                             "Python 3.10.4 (GPU)"
+                        when "IPython/7.26.0-GCCcore-11.2.0 jupyterlmod/4.0.3-GCCcore-11.2.0"
+                            "Python 3.8.16"
+                        when
+                            "IPython/7.26.0-GCCcore-11.2.0 jupyterlmod/4.0.3-GCCcore-11.2.0 CUDA/11.7.0"
+                            "Python 3.8.16 (GPU)"
                         else
                             "Python"
                         end
@@ -67,9 +72,10 @@ echo "TTT - $(date)"
 
 # Create custom Jupyter kernels
 echo "Creating custom Jupyter kernels..."
-export JUPYTER_PATH="${PWD}/share/jupyter:$HOME/.local/share/jupyter"
+export JUPYTER_PWD=${PWD}/share/jupyter
+export JUPYTER_PATH=${JUPYTER_PWD}:$HOME/.local/share/jupyter
 <%- kernels.each do |name, kernel| -%>
-<%- path = "${JUPYTER_PATH}/kernels/sys_#{name}" -%>
+<%- path = "${JUPYTER_PWD}/kernels/sys_#{name}" -%>
 mkdir -p "<%= path %>"
 cp "${PWD}/assets/<%= name.to_s.gsub(/\d/, "") %>"/* "<%= path %>/."
 (
