@@ -13,7 +13,7 @@ cluster: "login1"
 form:
   - node_type
   - version
-  - walltime
+  - num_hours
   - num_cores
   - memory
   - start_folder
@@ -61,10 +61,14 @@ attributes:
 #      - [   "R 3.6.1", "R/3.6.1-foss-2018a IPython/6.4.0-foss-2018a-Python-3.6.4 Pandoc/2.5" ]
 #      - [   "R 4.1.0", "R/4.1.0-foss-2021a IPython/7.25.0-GCCcore-10.3.0" ]
 
-  walltime:
-    label: Wall time
-    help: "Please give the wall time in the SLURM format, D-HH:MM:SS"
-    widget: "text_field"
+  num_hours:
+    label: Number of hours
+    widget: 'number_field'
+    help: "Please give the maximum wall time in hours"
+    value: 2
+    min: 1
+    step: 1
+    max: 12
 
   memory:
     label: Memory
