@@ -43,10 +43,6 @@ script:
     <%- if partition == 'gpushort' or partition == 'gpumedium' or partition == 'gpulong' -%>
     - '--gres=gpu:<%= gpu_type %>:1'
     <%- end -%>
-    <%- if hb_email_on_started and not hb_email_user.blank? -%>
-    - "--mail-type=BEGIN"
-    - "--mail-user=<%= hb_email_user %>"
-    <%- end -%>
     - "--mem"
     - "<%= memory.blank? ? 2000 : memory.to_i * 1000 %>"
     - "-c"
