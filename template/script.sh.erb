@@ -3,20 +3,16 @@
 <%-
     has_gpu = context.node_type.include?("gpu")
     cuda = ""
-    python_version = case context.auto_modules_IPython
-                        when "IPython/8.14.0-GCCcore-12.3.0"
+    python_version = case context.auto_modules_Jupyter_bundle
+                        when "Jupyter-bundle/20230823-GCCcore-12.3.0"
                             "Python 3.11.3"
-                        when "IPython/8.5.0-GCCcore-11.3.0"
-                            "Python 3.10.4"
-                        when "IPython/7.26.0-GCCcore-11.2.0"
-                            "Python 3.8.16"
                         else
                             "Python"
                         end
     if has_gpu
         python_version = python_version + " (GPU)"
     end
-    modules = (context.auto_modules_IPython)
+    modules = (context.auto_modules_Jupyter_bundle)
     wrapper = session.staged_root.join("launch_wrapper.sh")
     wrapper_log = session.staged_root.join("launch_wrapper.log")
     kernels = {

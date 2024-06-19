@@ -12,17 +12,17 @@ cluster: "login1"
 
 form:
   - node_type
-  - auto_modules_IPython
+  - auto_modules_Jupyter-bundle
   - num_hours
   - num_cores
   - memory
   - start_folder
 
 attributes:
-  auto_modules_IPython:
-    label: IPython Version
+  auto_modules_Jupyter-bundle:
+    label: Jupyter-bundle Version
     help: |
-      Select one of the IPython versions from the list.
+      Select one of the Jupyter-bundle versions from the list.
     default: false
   node_type:
     label: Node Type
@@ -43,7 +43,7 @@ attributes:
     help: |
       Select one of the Python versions from the dropdown.
     options:
-      - [   "Python 3.10.4", "IPython/8.5.0-GCCcore-11.3.0 jupyterlmod/4.0.3-GCCcore-11.3.0",
+      - [   "Python 3.10.4", "",
             data-option-for-node-type-gpua100: false,
             data-option-for-node-type-gpuv100: false
         ]
