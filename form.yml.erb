@@ -12,13 +12,18 @@ cluster: "login1"
 
 form:
   - node_type
-  - version
+  - auto_modules_Python
   - num_hours
   - num_cores
   - memory
   - start_folder
 
 attributes:
+  auto_modules_Python:
+    label: Python Version
+    help: |
+      Select one of the Python versions from the list.
+    default: false
   node_type:
     label: Node Type
     help: |

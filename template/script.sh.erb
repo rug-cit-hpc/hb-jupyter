@@ -15,7 +15,8 @@
                         else
                             "Python"
                         end
-    modules = (context.version)
+    python_version = context.auto_modules_Python
+    modules = (context.auto_modules_Python)
     wrapper = session.staged_root.join("launch_wrapper.sh")
     wrapper_log = session.staged_root.join("launch_wrapper.log")
     kernels = {
