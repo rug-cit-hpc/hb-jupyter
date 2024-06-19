@@ -12,6 +12,7 @@ cluster: "login1"
 
 form:
   - node_type
+  - mode
   - auto_modules_Jupyter-bundle
   - num_hours
   - num_cores
@@ -19,6 +20,12 @@ form:
   - start_folder
 
 attributes:
+  mode:
+    widget: "radio"
+    value: "1"
+    options:
+      - ["Jupyter Lab", "1"]
+      - ["Jupyter Notebook", "0"]
   auto_modules_Jupyter-bundle:
     label: Jupyter-bundle Version
     help: |
