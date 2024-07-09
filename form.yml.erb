@@ -12,13 +12,25 @@ cluster: "login1"
 
 form:
   - node_type
-  - version
+  - mode
+  - auto_modules_Jupyter-bundle
   - num_hours
   - num_cores
   - memory
   - start_folder
 
 attributes:
+  mode:
+    widget: "radio"
+    value: "1"
+    options:
+      - ["Jupyter Lab", "1"]
+      - ["Jupyter Notebook", "0"]
+  auto_modules_Jupyter-bundle:
+    label: Jupyter-bundle Version
+    help: |
+      Select one of the Jupyter-bundle versions from the list.
+    default: false
   node_type:
     label: Node Type
     help: |
@@ -31,35 +43,6 @@ attributes:
       - [ "GPU (A100)", "gpua100" ]
       - [ "GPU (V100)", "gpuv100" ]
       - [ "GELIFES", "gelifes" ]
-
-  version:
-    widget: "select"
-    label: "Python Version"
-    help: |
-      Select one of the Python versions from the dropdown.
-    options:
-      - [   "Python 3.10.4", "IPython/8.5.0-GCCcore-11.3.0 jupyterlmod/4.0.3-GCCcore-11.3.0",
-            data-option-for-node-type-gpua100: false,
-            data-option-for-node-type-gpuv100: false
-        ]
-      - [   "Python 3.10.4 (GPU)", "IPython/8.5.0-GCCcore-11.3.0 jupyterlmod/4.0.3-GCCcore-11.3.0 CUDA/11.7.0",
-            data-option-for-node-type-regular: false,
-            data-option-for-node-type-himem: false,
-            # data-option-for-node-type-parallel: false,
-            data-option-for-node-type-gelifes: false
-        ]
-      - [   "Python 3.8.16", "IPython/7.26.0-GCCcore-11.2.0 jupyterlmod/4.0.3-GCCcore-11.2.0",
-            data-option-for-node-type-gpua100: false,
-            data-option-for-node-type-gpuv100: false
-        ]
-      - [   "Python 3.8.16 (GPU)", "IPython/7.26.0-GCCcore-11.2.0 jupyterlmod/4.0.3-GCCcore-11.2.0 CUDA/11.7.0",
-            data-option-for-node-type-regular: false, 
-            data-option-for-node-type-himem: false, 
-            # data-option-for-node-type-parallel: false,
-            data-option-for-node-type-gelifes: false
-        ]
-#      - [   "R 3.6.1", "R/3.6.1-foss-2018a IPython/6.4.0-foss-2018a-Python-3.6.4 Pandoc/2.5" ]
-#      - [   "R 4.1.0", "R/4.1.0-foss-2021a IPython/7.25.0-GCCcore-10.3.0" ]
 
   num_hours:
     label: Number of hours

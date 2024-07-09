@@ -1,21 +1,18 @@
 #!/usr/bin/env bash
 
 <%-
+    has_gpu = context.node_type.include?("gpu")
     cuda = ""
-    python_version = case context.version
-                        when "IPython/8.5.0-GCCcore-11.3.0 jupyterlmod/4.0.3-GCCcore-11.3.0"
-                            "Python 3.10.4"
-                        when "IPython/8.5.0-GCCcore-11.3.0 jupyterlmod/4.0.3-GCCcore-11.3.0 CUDA/11.7.0"
-                            "Python 3.10.4 (GPU)"
-                        when "IPython/7.26.0-GCCcore-11.2.0 jupyterlmod/4.0.3-GCCcore-11.2.0"
-                            "Python 3.8.16"
-                        when
-                            "IPython/7.26.0-GCCcore-11.2.0 jupyterlmod/4.0.3-GCCcore-11.2.0 CUDA/11.7.0"
-                            "Python 3.8.16 (GPU)"
+    python_version = case context.auto_modules_Jupyter_bundle
+                        when "Jupyter-bundle/20230823-GCCcore-12.3.0"
+                            "Python 3.11.3"
                         else
                             "Python"
                         end
-    modules = (context.version)
+    if has_gpu
+        python_version = python_version + " (GPU)"
+    end
+    modules = (context.auto_modules_Jupyter_bundle)
     wrapper = session.staged_root.join("launch_wrapper.sh")
     wrapper_log = session.staged_root.join("launch_wrapper.log")
     kernels = {
@@ -106,4 +103,4 @@ echo "TTT - $(date)"
 # Launch the Jupyter server
 echo $JUPYTER_CONFIG_PATH
 set -x
-jupyter notebook --config="${CONFIG_FILE}"
+jupyter <%= context.mode == "1" ? "lab" : "notebook" %> --config="${CONFIG_FILE}"
