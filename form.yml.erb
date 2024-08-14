@@ -12,6 +12,7 @@ cluster: "login1"
 
 form:
   - node_type
+  - num_gpus
   - mode
   - auto_modules_Jupyter-bundle
   - num_hours
@@ -26,11 +27,13 @@ attributes:
     options:
       - ["Jupyter Lab", "1"]
       - ["Jupyter Notebook", "0"]
+
   auto_modules_Jupyter-bundle:
     label: Jupyter-bundle Version
     help: |
       Select one of the Jupyter-bundle versions from the list.
     default: false
+  
   node_type:
     label: Node Type
     help: |
@@ -38,11 +41,21 @@ attributes:
       [our wiki](https://wiki.hpc.rug.nl/habrok/introduction/cluster_description#compute_nodes)
     widget: select
     options:
-      - [ "Regular", "regular" ]
-      - [ "Himem", "himem" ]
+      - [ "Regular", "regular", data-hide-num-gpus: true]
+      - [ "Himem", "himem", data-hide-num-gpus: true ]
       - [ "GPU (A100)", "gpua100" ]
-      - [ "GPU (V100)", "gpuv100" ]
-      - [ "GELIFES", "gelifes" ]
+      - [ "GPU (V100)", "gpuv100", data-hide-num-gpus: true, data-set-num-gpus: 1 ]
+      - [ "GELIFES", "gelifes", data-hide-num-gpus: true ]
+  
+  num_gpus:
+    label: Number of GPUs
+    help: |
+      Select the number of GPUs you would like to use.
+    widget: number_field
+    value: 1
+    min: 1
+    step: 1
+    max: 4
 
   num_hours:
     label: Number of hours

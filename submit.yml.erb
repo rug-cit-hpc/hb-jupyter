@@ -41,7 +41,7 @@ script:
     # Hardcode the number of nodes to 1
     - "-N 1"
     <%- if partition == 'gpushort' or partition == 'gpumedium' or partition == 'gpulong' -%>
-    - '--gres=gpu:<%= gpu_type %>:1'
+    - '--gres=gpu:<%= gpu_type %>:<%= num_gpus.blank? ? 1 : num_gpus %>'
     <%- end -%>
     - "--mem"
     - "<%= memory.blank? ? 2000 : memory.to_i * 1000 %>"
