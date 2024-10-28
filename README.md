@@ -1,3 +1,6 @@
+# Repository moved
+The repository for this project has moved to https://gitrepo.service.rug.nl/cit-hpc/habrok/hb-jupyter.
+
 # Batch Connect - Example Jupyter Notebook Server
 
 ![GitHub Release](https://img.shields.io/github/release/osc/bc_example_jupyter.svg)
